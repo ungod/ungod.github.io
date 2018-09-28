@@ -1,5 +1,3 @@
-source 'http://gems.ruby-china.org'
-gem 'jekyll'
+source 'https://rubygems.org'
+gem 'github-pages', group: :jekyll_plugins
 #gem 'jekyll-admin', group: :jekyll_plugins
-gem 'jekyll-paginate'
-#gem 'jekyll-paginate-category'
