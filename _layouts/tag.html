@@ -4,14 +4,12 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="{{ page.title }} - {{ site.name }} - 作者:{{ site.author }}"/> 
-	{% if page.tags.size > 0%}<meta name="keywords" content="{% for tag in page.tags %}{% if tag != "" %}{{ tag }}{% if forloop.index != page.tags.size %},{% endif %}{% endif %}{% endfor %}"/>{% endif %}
-    <title>{{ page.title }} - {{ site.name }}</title>
+    <meta name="description" content="{{ page.description }} - {{ site.name }}" />
+    <title>标签：{{ page.title }} - {{ site.name }}</title>
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet"/>
     <!-- Custom CSS -->
     <link href="/css/blog.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/comment/default.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media
     queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file://
@@ -63,7 +61,30 @@
       <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8">
-          {{ content }}
+          <!-- Navi -->
+          <div class="post_frame">
+            <div class="post_navi">
+              <a href="/">首页</a>&nbsp;>&nbsp;<a href="{{ page.url }}.html">{{ page.title }}</a>&nbsp;>&nbsp;
+              <span class="post_navi_span">列表</span>
+            </div>
+            <div style="padding:10px">
+				{% for post in page.posts %}
+					<h2>
+					  <a href="{{ post.url }}">
+						{{ post.title }}
+					  </a> 
+					  <div class="post-date">
+						<span class="glyphicon glyphicon-time"></span>
+						{{ post.date | date:"%Y-%m-%d" }}
+					  </div>
+					</h2>
+					<hr>
+					{{ post.excerpt }}
+						<p><h3><a href="{{ post.url }}">阅读全文 &raquo;</a></h3></p>
+					<hr>
+				{% endfor %}
+            </div>
+          </div>
         </div>
         <!-- Blog Sidebar Widgets Column -->
         <div class="col-md-4">
@@ -90,6 +111,19 @@
             <div class="row">
                     {% include recent_posts.html %} 
             </div>
+          </div>		  
+          
+		      <!-- Blog Links Well -->
+          <div class="well">
+            <h4>
+              友情链接
+            <div class="linkme">
+            <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=w7SqraWqsa6DsrLtoKyu" target="_blank">
+              <span class="linkme_span">交换链接</span>
+            </a>
+            </div>
+            </h4>
+            {% include friendlinks.html %} 
           </div>
         </div>
       </div>
@@ -109,5 +143,4 @@
     <!-- /.container -->
     {% include spider.html %} 
   </body>
-
 </html>
