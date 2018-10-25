@@ -4,7 +4,7 @@ title: Instancing
 tags:
 ---
 
-###Instancing
+### Instancing
 
 假设一个场景有大量的模型绘制，且模型的顶点数据相同而世界坐标的变换不同。假设是有大量青草绿叶的场景：每一个青草绿叶模型都简单得仅仅由少量的三角形组成。你可能打算画相当多的此类模型，然后会导致场景每一帧就会渲染成千上万的草和叶。因为每片叶子仅仅由少量的三角形组成的渲染会快，但是数以千计的渲染调用会使性能大幅降低。
 
@@ -126,7 +126,7 @@ glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
 
 glDrawArraysInstanced的参数跟glDrawArrays完全一样，除了最后的参数，它用来设置我们要绘制的实例数量。因为我们希望显示100个四边形在一个10x10格子中，我们设置他为100。运行这段代码，最终会显示熟悉的图片，100个着色的四边形。
 
-###Instanced Arrays(实例化数组)
+### Instanced Arrays(实例化数组)
 前面的工作在特定的使用场景中实现得还行，无论何时我们要渲染多于100个实例(其实这相当普通)我们最终会碰到一个可以发送到shader的uniform数据限制(这里指是数量限制，参考[维基](https://www.khronos.org/opengl/wiki/Uniform_(GLSL))的Implementation limits)。其他可替代性方案的称为Instanced Arrays的，是定义一个顶点属性(允许我们保存更多数据)，它仅仅在vertex shader渲染新实例时更新。
 
 使用顶点属性，每次运行vertex shader会引起GLSL找回下一组顶点属性，它属于最近的顶点。然而当定义一个顶点属性为一个实例数组，vertex shader在实力化时仅仅更新顶点属性内容而不是每个顶点。这允许我们顶点使用标准顶点属性作为数据且使用实例化数组为每个实例保存唯一数据。
