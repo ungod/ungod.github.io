@@ -10,7 +10,7 @@ tags:
 
 如果我们渲染大量的对象，就像如下代码所述：
 
-```
+```c
 for(unsigned int i = 0; i < amount_of_models_to_draw; i++)
 {
     DoSomePreparations(); // bind VAO, bind textures, set uniforms etc.
@@ -30,11 +30,11 @@ Instancing是这么一个技术：我们一次性绘制大量的对象，以一�
 
 感受一下实例化绘图，我们将要展示一个简单的例子，在归一化坐标中渲染数百个2D四边形，仅用一个渲染调用。我们通过增加一个小位移，索引一个100位移的容器来实现它。最后结果是一个整齐有序的四边形网格填充整个窗口。
 
-![](http://ww1.sinaimg.cn/mw690/81b78497jw1emfgwkasznj21hc0u0qb7.jpg)
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_quads.png)
 
 每一个四边形由两个三角形和最多6个顶点组成。每个顶点包含一个2D归一设备坐标位置(NDC)向量和一个颜色向量组成。下面是这个例子的顶点数据————这个三角形是很小使他能在屏幕显示大量实例。
 
-```
+```c
 float quadVertices[] = {
     // positions     // colors
     -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
@@ -49,7 +49,7 @@ float quadVertices[] = {
 
 四边形颜色通过前面的vertex shader传入到fragment shader并设置输出。
 
-```
+```c
 #version 330 core
 out vec4 FragColor;
   
@@ -63,7 +63,7 @@ void main()
 
 为此也没啥新东西，除了vertex shader的前面让你感兴趣：
 
-```
+```c
 
 #version 330 core
 layout (location = 0) in vec2 aPos;
@@ -85,7 +85,7 @@ void main()
 
 我们需要设置偏移位置，在进入游戏循环之前，且一个嵌套循环中计算它。
 
-```
+```c
 glm::vec2 translations[100];
 int index = 0;
 float offset = 0.1f;
@@ -103,7 +103,7 @@ for(int y = -10; y < 10; y += 2)
 
 这里我们创建了一组100个平移向量，每个平移向量都是在10x10格子的所有位置。除了创建这个平移数组，我们同时需要把他转化为uniform数组：
 
-```
+```c
 shader.use();
 for(unsigned int i = 0; i < 100; i++)
 {
@@ -119,7 +119,7 @@ for(unsigned int i = 0; i < 100; i++)
 
 现在所有准备均完成，我们可以开始渲染多边形了。通过glDrawArrayInstanced或者glDrawElementsInstanced来实例化渲染。因为我们没有用index buffer，我们就调用glDrawArrays版本：
 
-```
+```c
 glBindVertexArray(quadVAO);
 glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
 ```
@@ -133,7 +133,7 @@ glDrawArraysInstanced的参数跟glDrawArrays完全一样，除了最后的参�
 
 下面给个实例化数组例子，我们将使用前面的例子并将偏移uniform数组表示为实例化数组。我们必须更新vertex shader，通过增加另外的顶点属性。
 
-```
+```c
 #version 330 core
 layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec3 aColor;
@@ -152,7 +152,7 @@ void main()
 
 因为一个实例化数组是一个顶点属性，像position和color变量那样，我们同时在vertex buffer object需要保存其内容且配置它的属性指针。我们首先要保存translations数组(前面例子部分)为一个新的缓存对象：
 
-```
+```c
 unsigned int instanceVBO;
 glGenBuffers(1, &instanceVBO);
 glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
@@ -162,7 +162,7 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 然后我们同时需要设置其顶点指针并启动顶点属性：
 
-```
+```c
 glEnableVertexAttribArray(2);
 glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
 glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
@@ -173,13 +173,13 @@ glVertexAttribDivisor(2, 1);
 最后一行比较因吹斯汀，我们调用了glVertexAttribDivisor。这个函数告诉OpenGL到下个元素什么时候更新顶点属性内容。第一个参数是顶点属性位置，第二个参数是属性除子。默认属性除子是0，它告诉OpenGL更新顶点属性内容于每次vertex shader迭代中。设置此属性为1我们则告诉OpenGL当我们开始渲染一个新的实例我们更新这顶点属性的内容。设置为2则每两次实例化的时候，以此类推。设置此属性除子为1我们高效地告诉OpenGL顶点属性中位置为2是一个实例化数组。
 
 如果我们再次使用glDrawArraysInstanced渲染四边形，我们获得一下输出：
-![](http://ww1.sinaimg.cn/mw690/81b78497jw1emfgwkasznj21hc0u0qb7.jpg)
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_quads.png)
 
 这是跟前面例子完全相同的，但是这时是用实例化数组完成的，它允许我们为实例化绘制传递更大量的数据(只要内存允许)到vertex shader。
 
 来干些更有趣的东西，我们也逐渐缩减每个四边形，从右上到左下，再次使用gl_InstanceID来实现。
 
-```
+```c
 void main()
 {
     vec2 pos = aPos * (gl_InstanceID / 100.0);
@@ -190,8 +190,8 @@ void main()
 
 这个结果是第一个四边形实例会被绘制得非常小，以后我们在绘制实例的过程中，gl_InstanceID 越是接近100越使四边形恢复到原大小。他通过gl_InstanceID完美合法地使用实例化数组，如下：
 
-![](http://ww1.sinaimg.cn/mw690/81b78497jw1emfgwkasznj21hc0u0qb7.jpg)
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_quads_arrays.png)
 
-如果你仍然有点不确定实例化渲染是如何工作或者想知道关于他们工作上的一切，我提供了所有[源码](https://www.khronos.org/opengl/wiki/Uniform_(GLSL)
+如果你仍然有点不确定实例化渲染是如何工作或者想知道关于他们工作上的一切，我提供了所有[源码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example.txt)
 
 这还不够，这个例子没真正的表现出Instancing。没错他确实简单展示了关于实例化的工作概况，但实例化是相当有用的当绘制巨量的相同对象，我们都还没看到。下面我们章节通过漫游太空以展示Instancing的真正实力。
