@@ -194,4 +194,156 @@ void main()
 
 如果你仍然有点不确定实例化渲染是如何工作或者想知道关于他们工作上的一切，我提供了所有[源码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example.txt)
 
-这还不够，这个例子没真正的表现出Instancing。没错他确实简单展示了关于实例化的工作概况，但实例化是相当有用的当绘制巨量的相同对象，我们都还没看到。下面我们章节通过漫游太空以展示Instancing的真正实力。
+这还不够，这个例子没真正的表现出Instancing。没错他确实简单展示了关于实例化的工作概况，但当绘制巨量的相同对象，实例化是相当有用的，我们都还没看到。下面我们章节通过漫游太空以展示Instancing的真正实力。
+
+### 小行星群
+想象一下我们在一个巨大星球里面，于一个巨大小行星环的中心的场景。这样一个小行星环包含数以千万计的石头形态且显卡比较难渲染出来。这种情况实例化渲染就变得特别有用，因为所有小行星都是用一个简单的模型作表现。每颗小行星都通过使用特有的变换矩阵包含细微的变化。
+
+要显示出实例化渲染的影响，我们首先渲染一个没有实例化渲染的小行星环游行星的场景。此场景会包含一个巨大行星([下载](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/planet.rar))和一个巨大的小行星集，它们已经被放到行星周围合适的位置。小行星模型[在此](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/rock.rar)下载。
+
+有关模型加载的教程，可以看[这里](https://learnopengl.com/#!Model-Loading/Assimp)。
+
+要实现我们想要的效果我们先创建每个行星的变换矩阵作为它的模型矩阵。变换矩阵首先通过平移到小行星环来创建————同时我们加上一个小小的位移让这个环看起来更自然。然后我们应用一个随机缩放以及随机旋转。这个结果是变换矩阵能变换每一个围绕行星的各个小行星的同时，还能给予它们更自然且相对其它小行星更独特。这个结果是会有一个充满各种各样的小行星的的环。
+
+```c
+unsigned int amount = 1000;
+glm::mat4 *modelMatrices;
+modelMatrices = new glm::mat4[amount];
+srand(glfwGetTime()); // initialize random seed	
+float radius = 50.0;
+float offset = 2.5f;
+for(unsigned int i = 0; i < amount; i++)
+{
+    glm::mat4 model;
+    // 1. translation: displace along circle with 'radius' in range [-offset, offset]
+    float angle = (float)i / (float)amount * 360.0f;
+    float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+    float x = sin(angle) * radius + displacement;
+    displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+    float y = displacement * 0.4f; // keep height of field smaller compared to width of x and z
+    displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+    float z = cos(angle) * radius + displacement;
+    model = glm::translate(model, glm::vec3(x, y, z));
+
+    // 2. scale: Scale between 0.05 and 0.25f
+    float scale = (rand() % 20) / 100.0f + 0.05;
+    model = glm::scale(model, glm::vec3(scale));
+
+    // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
+    float rotAngle = (rand() % 360);
+    model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+    // 4. now add to list of matrices
+    modelMatrices[i] = model;
+}  
+```
+
+这代码看起来有点吓人，但是基本上是变换小行星x与z的位置，它属于一个定义半径为radius的圆，以及小行星随机在圆的-offset和offset中显示。我们给以y位移更小的影响使小行星环更加偏平。然后应用缩放和旋转，并保存结果到modelMatrices，其数量是amount。这时我们为小行星创建了1000个模型矩阵。
+
+读取行星和小行星模型且编译一系列shader完毕后，渲染代码如下：
+
+```c
+// draw Planet
+shader.use();
+glm::mat4 model;
+model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f));
+model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+shader.setMat4("model", model);
+planet.Draw(shader);
+  
+// draw meteorites
+for(unsigned int i = 0; i < amount; i++)
+{
+    shader.setMat4("model", modelMatrices[i]);
+    rock.Draw(shader);
+}  
+```
+
+首先我们绘制行星模型并平移缩放以适应场景，然后绘制大量小行星模型其数量等同于上面计算过的变换数。绘制每个小行星之前，我们不使用shader来设置对应的模型变换。
+
+这个结果是一个太空一样的场景，我们能看到很自然小行星环围绕着行星。
+
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_asteroids.png)
+
+这个场景包含总量为1001的渲染调用每帧，1000个是小行星模型。你能在这里找到[源码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example2.txt)。
+
+一旦我们开始增加数量，我们发现场景将会运行得原来越慢，每秒能渲染的帧数也剧烈减少。只要设置到2000个场景就会变得很慢，几乎无法移动。
+
+让我们尝试用实例化渲染来渲染同一个场景。我们首先修改vertex shader来适应一下：
+
+```c
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 2) in vec2 aTexCoords;
+layout (location = 3) in mat4 instanceMatrix;
+
+out vec2 TexCoords;
+
+uniform mat4 projection;
+uniform mat4 view;
+
+void main()
+{
+    gl_Position = projection * view * instanceMatrix * vec4(aPos, 1.0); 
+    TexCoords = aTexCoords;
+}
+```
+
+我们不再用模型的uniform变量，取而代之我们声明一个mat4作为顶点属性以保存一个变换矩阵的实例数组。但是，当我们定义一个数据类型大于vec4会有点不一样。vec4是最大允许的顶点属性的数据量。因为mat4其实就是4个vec4，我们必须为指定的矩阵来保留4个顶点属性。因为我们当时是赋值位置为3，这个矩阵的列是顶点属性的3,4,5,6。
+
+我们必须为4个顶点属性设置每一个顶点属性的指针，且配置他们作为实例化数组：
+
+```c
+// vertex Buffer Object
+unsigned int buffer;
+glGenBuffers(1, &buffer);
+glBindBuffer(GL_ARRAY_BUFFER, buffer);
+glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+  
+for(unsigned int i = 0; i < rock.meshes.size(); i++)
+{
+    unsigned int VAO = rock.meshes[i].VAO;
+    glBindVertexArray(VAO);
+    // vertex Attributes
+    GLsizei vec4Size = sizeof(glm::vec4);
+    glEnableVertexAttribArray(3); 
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+    glEnableVertexAttribArray(4); 
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(vec4Size));
+    glEnableVertexAttribArray(5); 
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
+    glEnableVertexAttribArray(6); 
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
+    glBindVertexArray(0);
+}  
+```
+
+注意我们修改了Mesh的VAO变量为了公共变量而不是私有变量，这样我们能访问顶点数组对象。这不是最干净的做法，但是要适用这个教程这样改起来比较简单。除了有点hack，这个代码看起来比较清晰。我们基本上声明了OpenGL是如何诠释每个矩阵顶点属性的缓存，以及每个顶点属性都是一个实例化数组。
+
+下面我们再次使用mesh的VAO使用glDrawElementsInstanced来绘制：
+
+```c
+// draw meteorites
+instanceShader.use();
+for(unsigned int i = 0; i < rock.meshes.size(); i++)
+{
+    glBindVertexArray(rock.meshes[i].VAO);
+    glDrawElementsInstanced(
+        GL_TRIANGLES, rock.meshes[i].indices.size(), GL_UNSIGNED_INT, 0, amount
+    );
+}  
+```
+
+这里我们绘制了跟之前例子相同数量的小行星，但这次用的是实例化绘制。结果是相似的，但是你可以通过增加amount变量来观察实例化渲染的影响。没有实例化渲染，1000到1500渲染起来还是平滑的。有了实例化渲染，增加到100000,一个小行星576个顶点，合计5700万个顶点我们看到它们绘制到屏幕上还毫无性能下降！（当然这看你机器性能）
+
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_asteroids_quantity.png)
+
+这图是渲染了100000个小行星，150.0f的半径和25.0f的offset，你能在这找到demo[代码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example3.txt)。
+
+如你所见，正确的环境实例化渲染类型能产生巨大的显卡性能差异。以此为由，实例化渲染广泛用到草、植物群、粒子以及类似的场景————基本上任意重复形状的渲染都能在实例化渲染中收益。
