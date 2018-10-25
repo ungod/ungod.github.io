@@ -347,3 +347,5 @@ for(unsigned int i = 0; i < rock.meshes.size(); i++)
 这图是渲染了100000个小行星，150.0f的半径和25.0f的offset，你能在这找到demo[代码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example3.cpp)。
 
 如你所见，正确的环境实例化渲染类型能产生巨大的显卡性能差异。以此为由，实例化渲染广泛用到草、植物群、粒子以及类似的场景————基本上任意重复形状的渲染都能在实例化渲染中收益。
+
+原文地址：https://learnopengl.com/Advanced-OpenGL/Instancing
