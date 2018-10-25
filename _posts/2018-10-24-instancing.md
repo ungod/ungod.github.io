@@ -192,7 +192,7 @@ void main()
 
 ![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_quads_arrays.png)
 
-如果你仍然有点不确定实例化渲染是如何工作或者想知道关于他们工作上的一切，我提供了所有[源码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example.txt)
+如果你仍然有点不确定实例化渲染是如何工作或者想知道关于他们工作上的一切，我提供了所有[源码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example.cpp)
 
 这还不够，这个例子没真正的表现出Instancing。没错他确实简单展示了关于实例化的工作概况，但当绘制巨量的相同对象，实例化是相当有用的，我们都还没看到。下面我们章节通过漫游太空以展示Instancing的真正实力。
 
@@ -265,7 +265,7 @@ for(unsigned int i = 0; i < amount; i++)
 
 ![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_asteroids.png)
 
-这个场景包含总量为1001的渲染调用每帧，1000个是小行星模型。你能在这里找到[源码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example2.txt)。
+这个场景包含总量为1001的渲染调用每帧，1000个是小行星模型。你能在这里找到[源码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example2.cpp)。
 
 一旦我们开始增加数量，我们发现场景将会运行得原来越慢，每秒能渲染的帧数也剧烈减少。只要设置到2000个场景就会变得很慢，几乎无法移动。
 
@@ -344,6 +344,6 @@ for(unsigned int i = 0; i < rock.meshes.size(); i++)
 
 ![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/instancing_asteroids_quantity.png)
 
-这图是渲染了100000个小行星，150.0f的半径和25.0f的offset，你能在这找到demo[代码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example3.txt)。
+这图是渲染了100000个小行星，150.0f的半径和25.0f的offset，你能在这找到demo[代码](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/2018-10-24-instancing/example3.cpp)。
 
 如你所见，正确的环境实例化渲染类型能产生巨大的显卡性能差异。以此为由，实例化渲染广泛用到草、植物群、粒子以及类似的场景————基本上任意重复形状的渲染都能在实例化渲染中收益。
