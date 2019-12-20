@@ -1,0 +1,111 @@
+---
+layout: post
+title: 程序化地图生成
+tags:
+---
+
+## 高度图的生成
+
+首先这里是三个柏林噪声的叠加。每一个柏林噪声的声波，称为octaves。
+
+[](1.png)
+
+上图中，三个蓝色声波图，假设的是：地形主轮廓，巨砾坡和碎石。
+红色的则是叠加了三个波图的结果。
+
+lacunarity是一个用于增加octaves频率的参数。下图是模拟结果：
+
+[](2.png)
+
+persistance则是用于缩小octaves振幅的参数。下图是模拟结果：
+
+[](3.png)
+
+也就是说，每一个octaves，频率缩放lacunarity倍，振幅缩放persistance倍。
+
+有了三个调节参数，我们思路就很清晰了：对于生成的每一个噪声点，我们使用数张octaves的噪声图的采样点，而每张噪声图，使用不同的随机数生成。每一个octaves采样点，由于柏林噪声采样的步幅越大，噪声曲线的结果周期就越小（看起来噪声更密集），也就是频率越大，所以采样步幅与频率与成正比，将步幅乘以频率则可。而振幅则是将噪声结果放大，将结果乘以步幅则可。
+
+另外要使用不同的随机数生成柏林噪声，由于使用的Unity数学库没有提供随机种子的输入，我们这里使用随机步幅作为输入来产生随机数。
+
+代码如下：
+
+```c
+float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset) 
+{
+	float[,] noiseMap = new float[mapWidth,mapHeight];
+
+	System.Random prng = new System.Random (seed);
+	Vector2[] octaveOffsets = new Vector2[octaves];
+	for (int i = 0; i < octaves; i++) 
+	{
+		float offsetX = prng.Next (-100000, 100000) + offset.x;
+		float offsetY = prng.Next (-100000, 100000) + offset.y;
+		octaveOffsets [i] = new Vector2 (offsetX, offsetY);
+	}
+
+	if (scale <= 0) 
+	{
+		scale = 0.0001f;
+	}
+
+	float maxNoiseHeight = float.MinValue;
+	float minNoiseHeight = float.MaxValue;
+
+	float halfWidth = mapWidth / 2f;
+	float halfHeight = mapHeight / 2f;
+
+
+	for (int y = 0; y < mapHeight; y++) 
+	{
+		for (int x = 0; x < mapWidth; x++) {
+	
+			float amplitude = 1;
+			float frequency = 1;
+			float noiseHeight = 0;
+
+			for (int i = 0; i < octaves; i++) 
+			{
+				float sampleX = (x-halfWidth) / scale * frequency + octaveOffsets[i].x;
+				float sampleY = (y-halfHeight) / scale * frequency + octaveOffsets[i].y;
+
+				float perlinValue = Mathf.PerlinNoise (sampleX, sampleY) * 2 - 1;
+				noiseHeight += perlinValue * amplitude;
+
+				amplitude *= persistance;
+				frequency *= lacunarity;
+			}
+
+			if (noiseHeight > maxNoiseHeight) 
+			{
+				maxNoiseHeight = noiseHeight;
+			} else if (noiseHeight < minNoiseHeight) 
+			{
+				minNoiseHeight = noiseHeight;
+			}
+			noiseMap [x, y] = noiseHeight;
+		}
+	}
+
+	for (int y = 0; y < mapHeight; y++) 
+	{
+		for (int x = 0; x < mapWidth; x++) 
+		{
+			noiseMap [x, y] = Mathf.InverseLerp (minNoiseHeight, maxNoiseHeight, noiseMap [x, y]);
+		}
+	}
+
+	return noiseMap;
+}
+```
+
+代码的最后循环将所有结果缩放到到[0,1]区间。
+
+下图是通过参数生成的结果：
+
+[](4.png)
+
+## 分层
+
+自然界的分层，简单概况来说，就是低洼地是海，海与平原的交界是沙滩，比平原高的是丘陵，更高的是山脉，然后是雪山。程序化处理，可以简单看成是蓝色（海），黄色（沙滩），绿色（平原），深绿色（丘陵），褐色（山脉），白色（雪山），当然你也可以自己定义。原理都是一样，把高度图的结果[0,1]根据你的定义，不同的区间（比如0-0.3是海，0.3-0.5是沙滩等）划分成不同层次。这里是划分结果：
+
+[](5.png)
