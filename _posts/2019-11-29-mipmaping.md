@@ -26,8 +26,7 @@ tags:
 
 要完美地消灭锯齿，我们想要一个过滤器能匹配图1的棕色线————低频为0，高频为1。在信号处理项中，我们想要一个完美的低通滤波。这图表显示为像素平均没有滤波没有靠近此效果。它消灭的大块我们想保留的，让输出有点模糊。同时它也保留了我们更想扔掉的，这导致了锯齿。消灭不了锯齿是因为把锯齿烘到小纹理中，这一点很重要。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure1.jpg)
-(图1：频率响应图表，box filter对比完美的滤波。棕色是完美频率响应，黄色是box filter。x轴表示频率；y轴表示滤波器缩放该频率的量，值为0 - 1)
+![图1：频率响应图表，box filter对比完美的滤波。棕色是完美频率响应，黄色是box filter。x轴表示频率；y轴表示滤波器缩放该频率的量，值为0 - 1](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure1.jpg)
 
 ## 如何构建更好的滤波器
 
@@ -216,10 +215,10 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 当我们为了抗锯齿而进行低通滤波时，我们是在对这种错误的解释进行操作。注意到图10的余弦波能下采样为mipmap在它的角度来看还不错。但是当我们过滤它，我们裁剪所有红线右边的高频信号。这些频率不是真的在这里，当我们用余弦波减去他们，形状就会变化。我们这是自食其果。这一点很重要:某种假想的“真实”反锯齿会让余弦函数毫发无损，但是我们所知道的是当傅里叶变换通过它自己独特的隧道视觉来看待它的时候如何抗锯齿。这样导致了问题。
 
-!()[https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure10.jpg]
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure10.jpg)
 图10：一个低频余弦波（绿色）可以简单地被标记为白色的间隔中采样。
 
-!()[https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure11.jpg]
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure11.jpg)
 图11：频率含量的大小（黄色），由傅里叶变换得出。它是两个sinc脉冲的和。红色阶跃函数表示理想低通滤波器的截取脉冲。
 
 ## 能量转换
@@ -228,7 +227,7 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 图12演示了这一点。左边是高对比度的清晰纹理，右边是低分辨率通过简单方法构造的mipmap：包含精细特征的区域明显变暗。
 
-!()[https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure12.jpg]
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure12.jpg)
 图12：左边是源纹理，右边是高对比度纹理经过3个mipmap等级处理后。文字变得有点暗，描边的矩形变得相当的暗。这是伽玛斜面造成的能量损失。
 
 简单介绍一下gamma：除非我们对显卡做了奇怪的调整，CRT显示器出来的光的亮不是帧缓存值“p”的正比，而是p^γ的正比，γ（gamma）是一个依赖设备的值一般大于2。我们的眼睛描述光能量是对数级的，所以指数级的能量迸发到我们大脑时，我们才看起来有点线性。
@@ -241,7 +240,7 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 现在我们很清晰了，设置帧缓存保证所有保存的值都是光能量的线性相关的，RAMDAC将执行任何必要的求幂运算。高端电影和科学渲染都会用线性光，近来游戏渲染也普及了。当帧缓存是线性光，你能通过在帧缓存增加像素值来增加表面的辐射（现在当表面被多个光照射时，我们能把他们加在一起，但是gamma的ramp是不对的。这就是为什么PC游戏呆滞无光。）
 
-!()[https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure13.jpg]
+![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure13.jpg)
 图13：左：使用box filter来mipmapped的高速公路标志。中：Kaiser filter能保留数字的形状和标志的边缘。右：使用光线性空间的Kaiser filtering，我们保留了数字和背景的对比度，同时保留了标志缘的白边。
 
 参考：
