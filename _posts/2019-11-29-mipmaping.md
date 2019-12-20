@@ -110,22 +110,19 @@ void build_lame_mipmap(Mipmap *source, Mipmap *dest) {
 
 图2显示所有频率响应。Kaiser滤波器和Lanczos滤波器的系数区别微妙，所以它们的频率响应函数几乎一样。每种率滤波器都mipmapped过的图，我看着实在是看不出区别。尽管mipmapping在图像过滤中不是十分费力，Don的测试更严格。我认为，只要计算开销是一样的，我们就应该养成一个使用稍微好一点的过滤器，为了未来碰到更加难的问题做准备。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure2.jpg)
-图2：本文提及到的滤波器的频率响应。棕色的是最理想的，青色的是point filter，黄色是box filter，绿色是Lanczos和Kaiser的窗口sinc脉搏，图像几乎重合。x轴是频率，y轴是被滤波器缩放频率的量。
+![图2：本文提及到的滤波器的频率响应。棕色的是最理想的，青色的是point filter，黄色是box filter，绿色是Lanczos和Kaiser的窗口sinc脉搏，图像几乎重合。x轴是频率，y轴是被滤波器缩放频率的量。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure2.jpg)
 
 ## 避免涟漪
 
 看看图2，在高质量的频率响应是会有点涟漪的。信号处理数学说明我们能通过提高宽度来增加滤波器的质量。当我们这么做，我们获得一个近似于理想低通滤波器的曲线，但是有点涟漪，同时每个波峰和凹槽是集中在一个更紧密的频率组内。图3包含一个16和64大小的Kaiser滤波器的图表。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure3.jpg)
-图3：不同宽度的Kaiser频率响应。棕色：理想情况，绿色：16次采样，黄色：64次采样。x轴表示频率，y轴表示滤波器缩放该频率的数量。
+![图3：不同宽度的Kaiser频率响应。棕色：理想情况，绿色：16次采样，黄色：64次采样。x轴表示频率，y轴表示滤波器缩放该频率的数量。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure3.jpg)
 
 在音频处理的世界中，这种程度的涟漪是可以忽略的，但是我们眼睛是比耳朵挑剔的。因为这些涟漪更紧密（连贯）集中在频率组中，他们会创建更加连续的锯齿快在图像中。去除一个足够宽的滤波器，应用到一个有个巨大连续颜色区域的纹理中，你会看到很多地方有锯齿块（振铃）。
 
 在我开始看到测试图像中明显的锯齿块之前，我只能先把Kaiser滤波器设置宽度为14采样。要显示之后发生了啥，我在一个路标纹理上运行了一个宽滤波器。图4是14个取样和64个取样的锯齿块对比。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure4.png)
-图4，分别是16采样和64采样的Kaiser滤波器。
+![图4，分别是16采样和64采样的Kaiser滤波器。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure4.png)
 
 有人会想，如果你想消耗大量的CPU时间，你能使用巨大的滤波器，会趋近理想低通响应，你就不会看到涟漪了。我尝试这个滤波器1000采样宽度，大量的锯齿块都消失掉了。
 
@@ -145,13 +142,11 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 图5中，像素平均的版本，三个mipmap等级下去，下面的版权文字都没了，且女人的嘴巴有时候会显得模糊。Kaise滤波器中，版权文字则可见且女人的牙齿可辨。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure5.png)
-图5：前面是原图。中间是通过box-filter处理过的前面的图的右下角，后面是Kaiser-filter处理过，它们通过Photoshop的bicubic filter放大。
+![图5：前面是原图。中间是通过box-filter处理过的前面的图的右下角，后面是Kaiser-filter处理过，它们通过Photoshop的bicubic filter放大。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure5.png)
 
 图6中显示另外的一个公告版。在box filter版本中，文字是模糊难辨的，瓶标显得不大清晰。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure6.png)
-图6：前面是原图。中间是通过box-filter处理过的前面的图的左上角，后面是Kaiser-filter处理过，它们通过Photoshop的bicubic filter放大。
+![图6：前面是原图。中间是通过box-filter处理过的前面的图的左上角，后面是Kaiser-filter处理过，它们通过Photoshop的bicubic filter放大。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure6.png)
 
 ## 深度优化
 
@@ -166,8 +161,7 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 但是我们输出并不是完美，纹理贴图然后是有可怕的涟漪，就像图7那样。这看起来跟之前用64采样Kaiser filter处理结果一样，看起来就像之前说的“振铃”那样。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure7.png)
-图7左边是原图，右边是右下角的mipmaping过的特写，这是通过连续傅里叶变换。这一条条的“振铃”不是我们想要的。（但是经过试验，人脸的效果却是比Kaiser filter效果好的，这什么鬼？）
+![图7左边是原图，右边是右下角的mipmaping过的特写，这是通过连续傅里叶变换。这一条条的“振铃”不是我们想要的。（但是经过试验，人脸的效果却是比Kaiser filter效果好的，这什么鬼？）](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure7.png)
 
 最大的问题是我们纹理映射的概念定义就是不明确。纹理映射的目的是要唤起观察者脑中要显示出来的表面的自然效果。我们呢要思考一下保存早纹理贴图的数学结果，并比较一下我们对应表面的数学心理模型，我们看到其实这是冲突的。
 
@@ -175,8 +169,7 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 我们的图像表面的心理模型是连续函数，但是我呢里映射不是连续的。它存在于一系列的采样，就像图8右边所画的那样。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure8.png)
-图8 左：纯绿纹理包含一个白点（一个大方块）。右：左边纹理的，以强调自然离散数据画出来。
+![图8 左：纯绿纹理包含一个白点（一个大方块）。右：左边纹理的，以强调自然离散数据画出来。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure8.png)
 
 让我们聊聊采样和重构。当我们采样任意（无带宽限制）联系函数于点n，这个点是我们仅有的信息。假设我们去一系列的采样，尝试构建一个连续函数。我们需要对每一个值进行插值，但是因为我们抛弃了大部分原生数据，没有插值算法能还原我们最开始的值。我们不知道这些样本之间是什么。
 
@@ -184,8 +177,7 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 但是这思想有个后果。当重构它时，我们不允许口述这个函数在每个采样点中做了啥，我们必须给什么就拿什么。因为连续函数必须是限制带宽的，这样会在样本间摇摆，不是我们预期的。图9显示绿白点图的1D横截面，且我们使用正弦函数作为我们的重构基础表现为连续函数。注意到连续版本在绿色区域不是扁平的，跟我们想的不大一样。它是涟漪的。它不可能扁平，因为带宽限制的影响，这意味着函数是不能将斜率降为0。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure9.png)
-图9：图8的从侧边看的1维横截面，青色曲线就是采样表现来的限制带宽连续函数。
+![图9：图8的从侧边看的1维横截面，青色曲线就是采样表现来的限制带宽连续函数。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure9.png)
 
 只要我们以数学的角度来看这问题，这里会产生：为了创建我们的纹理，我们从一些带宽限制的到处是涟漪的函数开始，但是当对它采样，我们的采样点会在涟漪中击中红点，来创建常数密度值。因为采样显示整个连续函数，涟漪仍然在这里，我们的信号处理控制器会准确地复现出来。当我们收缩纹理来建立mipmap，我们本质上是缩放我们视角的连续函数。可见的涟漪会显示因为缩放的改变和增加低通滤波器会破坏了我们采样点位置的微妙的“一致性”。
 
@@ -215,11 +207,9 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 当我们为了抗锯齿而进行低通滤波时，我们是在对这种错误的解释进行操作。注意到图10的余弦波能下采样为mipmap在它的角度来看还不错。但是当我们过滤它，我们裁剪所有红线右边的高频信号。这些频率不是真的在这里，当我们用余弦波减去他们，形状就会变化。我们这是自食其果。这一点很重要:某种假想的“真实”反锯齿会让余弦函数毫发无损，但是我们所知道的是当傅里叶变换通过它自己独特的隧道视觉来看待它的时候如何抗锯齿。这样导致了问题。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure10.jpg)
-图10：一个低频余弦波（绿色）可以简单地被标记为白色的间隔中采样。
+![图10：一个低频余弦波（绿色）可以简单地被标记为白色的间隔中采样。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure10.jpg)
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure11.jpg)
-图11：频率含量的大小（黄色），由傅里叶变换得出。它是两个sinc脉冲的和。红色阶跃函数表示理想低通滤波器的截取脉冲。
+![图11：频率含量的大小（黄色），由傅里叶变换得出。它是两个sinc脉冲的和。红色阶跃函数表示理想低通滤波器的截取脉冲。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure11.jpg)
 
 ## 能量转换
 一个重要的mipmaping滤波器的目标是他们不增加或减少一张图的能量，一张纹理的所有mapmap等级亮度要一致。这相当于说，当你在一个给定的样本上扫过一个过滤器时，该样本的所有贡献的总和不会超过样本的原始大小。换句话说，Σfi*s = s，fi是滤波器系数，s是取样值。当Σfi = 1，滤波器的系数和为1。
@@ -227,8 +217,7 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 图12演示了这一点。左边是高对比度的清晰纹理，右边是低分辨率通过简单方法构造的mipmap：包含精细特征的区域明显变暗。
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure12.jpg)
-图12：左边是源纹理，右边是高对比度纹理经过3个mipmap等级处理后。文字变得有点暗，描边的矩形变得相当的暗。这是伽玛斜面造成的能量损失。
+![图12：左边是源纹理，右边是高对比度纹理经过3个mipmap等级处理后。文字变得有点暗，描边的矩形变得相当的暗。这是伽玛斜面造成的能量损失。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure12.png)
 
 简单介绍一下gamma：除非我们对显卡做了奇怪的调整，CRT显示器出来的光的亮不是帧缓存值“p”的正比，而是p^γ的正比，γ（gamma）是一个依赖设备的值一般大于2。我们的眼睛描述光能量是对数级的，所以指数级的能量迸发到我们大脑时，我们才看起来有点线性。
 
@@ -240,8 +229,7 @@ Kaiser滤波器的效果看起来一般比较好点。一些例子：
 
 现在我们很清晰了，设置帧缓存保证所有保存的值都是光能量的线性相关的，RAMDAC将执行任何必要的求幂运算。高端电影和科学渲染都会用线性光，近来游戏渲染也普及了。当帧缓存是线性光，你能通过在帧缓存增加像素值来增加表面的辐射（现在当表面被多个光照射时，我们能把他们加在一起，但是gamma的ramp是不对的。这就是为什么PC游戏呆滞无光。）
 
-![](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure13.jpg)
-图13：左：使用box filter来mipmapped的高速公路标志。中：Kaiser filter能保留数字的形状和标志的边缘。右：使用光线性空间的Kaiser filtering，我们保留了数字和背景的对比度，同时保留了标志缘的白边。
+![图13：左：使用box filter来mipmapped的高速公路标志。中：Kaiser filter能保留数字的形状和标志的边缘。右：使用光线性空间的Kaiser filtering，我们保留了数字和背景的对比度，同时保留了标志缘的白边。](https://raw.githubusercontent.com/ungod/ungod.github.io/master/_postasset/mipmaping/figure13.png)
 
 参考：
 http://number-none.com/product/Mipmapping,%20Part%201/index.html
