@@ -73,10 +73,10 @@ toc:
   article: true   ## 是否在文章中显示目录
   aside: true     ## 是否在侧边栏显示目录
 
-<!-- #### 友情链接
+#### 友情链接
 links:
   码农圈: https://coderq.com,一个面向程序员交流分享的新一代社区
-  Jark's Blog: http://wuchong.me -->
+  Jark's Blog: http://wuchong.me
   
 #### 评论
 duoshuo_shortname: 
