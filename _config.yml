@@ -32,7 +32,7 @@ title : Lynx
 tagline: A blog focus on game develop
 assets: /assets
 url:
-baseurl: /ungod.github.io
+baseurl:
 
 #### Language
 language: zh-CN    ## blog site languages: en, zh-CN, zh-TW, de
