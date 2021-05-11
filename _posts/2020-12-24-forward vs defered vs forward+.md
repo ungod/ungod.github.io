@@ -2,6 +2,7 @@
 layout: post
 title: Forward vs Deferred vs Forward+ Rendering with DirectX 11
 tags:
+typora-root-url: ..\
 ---
 
 ### 介绍
@@ -15,7 +16,7 @@ tags:
 
 这些二维图像缓冲区的组合称为几何缓冲区(G-Buffer)。
 
-![G-Buffer-900x506](../assets/postasset/2020-12-24-forward vs defered vs forward+/G-Buffer-900x506.jpg)
+![G-Buffer-900x506](/assets/postasset/2020-12-24-forward vs defered vs forward+/G-Buffer-900x506.jpg)
 
 
 
