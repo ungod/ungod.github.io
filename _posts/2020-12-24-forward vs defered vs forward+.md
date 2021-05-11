@@ -13,12 +13,10 @@ tags:
 -diffuse颜色
 -specular颜色和次幂
 
-
-
 这些二维图像缓冲区的组合称为几何缓冲区(G-Buffer)。
 
 ![G-Buffer-900x506](../assets/postasset/2020-12-24-forward vs defered vs forward+/G-Buffer-900x506.jpg)
 
 
 
-测试一下后1
+测试一下后2
