@@ -17,4 +17,5 @@ tags:
 
 这些二维图像缓冲区的组合称为几何缓冲区(G-Buffer)。
 
-![G-Buffer-900x506](forwardRender/G-Buffer-900x506.jpg)
+![G-Buffer-900x506](../_postasset/forwardRender/G-Buffer-900x506.jpg)
+
