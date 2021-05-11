@@ -2,6 +2,7 @@
 layout: post
 title: Mipmapping
 tags:
+date: 2019-11-29
 ---
 
 因为最近做sss效果时，需要自己写模型厚度生成工具。厚度图的生成是使用反AO的方法，参考自[GDC-2011](https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/)。而AO的生成，其中有一种是利用到Mipmapper来做遮挡均值。以后有机会写一篇文章来具体描述一下吧。这篇文章主要详细讲一下Mipmapping的原理，以明白为啥能用它来做遮挡均值。
