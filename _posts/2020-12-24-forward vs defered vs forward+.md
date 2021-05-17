@@ -3,7 +3,6 @@ layout: post
 title: 前向渲染、延迟渲染和Forward+
 tags:
 typora-root-url: ..\
-ref: https://www.3dgep.com/forward-plus/
 ---
 
 项目最近计划要在移动平台上添加大量的动态光，计划使用Cluster Forward Plus，由于项目使用URP，别说CFP，延迟渲染现在还没被支持（据说之后Unity有支持的计划），所以需要我们自己实现。本文是对一篇网络论文的整理，有部分是自己的理解，但大部分还是作者的论述。
