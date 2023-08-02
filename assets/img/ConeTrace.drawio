@@ -1,14 +1,32 @@
-<mxfile host="app.diagrams.net" modified="2023-08-02T12:27:06.451Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="vcHpgo7fYJN9wnS1BFc0" version="21.6.6" type="github">
+<mxfile host="app.diagrams.net" modified="2023-08-02T12:35:12.129Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="-8c82rGAw1UGGDQFuA4_" version="21.6.6" type="github">
   <diagram name="第 1 页" id="GG2GPgAhEHXItB-q4OLB">
-    <mxGraphModel dx="1530" dy="984" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2357" dy="2153" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="7-QyehG6SimDxBiLKtaB-1" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="390" y="530" as="sourcePoint" />
-            <mxPoint x="480" y="320" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-11" value="" style="triangle;whiteSpace=wrap;html=1;rotation=-180;strokeColor=#004C99;" vertex="1" parent="1">
+          <mxGeometry x="80" y="-10" width="630" height="775" as="geometry" />
+        </mxCell>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-2" value="" style="triangle;whiteSpace=wrap;html=1;rotation=-180;" vertex="1" parent="1">
+          <mxGeometry x="80" y="130" width="630" height="495" as="geometry" />
+        </mxCell>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-5" value="" style="rounded=0;whiteSpace=wrap;html=1;rotation=336;dashed=1;dashPattern=12 12;" vertex="1" parent="1">
+          <mxGeometry x="-50" y="-50" width="510" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-6" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="630" y="130" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-7" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="690" y="555" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-8" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="650" y="300" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-9" value="" style="points=[[0,0.5,0],[0.19,0.02,0],[0.59,0,0],[0.985,0.02,0],[1,0.5,0],[0.985,0.98,0],[0.59,1,0],[0.19,0.98,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.camera;fillColor=#005073;strokeColor=none;rotation=-180;" vertex="1" parent="1">
+          <mxGeometry x="40" y="362.5" width="54" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7-QyehG6SimDxBiLKtaB-10" value="" style="shape=mxgraph.pid.driers.heat_consumer;html=1;pointerEvents=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="130" y="352.5" width="30" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
