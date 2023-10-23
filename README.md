@@ -60,7 +60,7 @@ This project was built primarily with the [Jekyll][jekyllrb] ecosystem,
 The avatar and favicon design from [Clipart Max][image].
 
 Many thanks to the [contributors][contributors] who participated in the development
-and to the folks who reported bugs or shared ideas.
+and to the folks who reported bugs or shared ideas. 
 
 Last but not least, thanks to [JetBrains][jetbrains] for providing the _Open Source License_.
 
