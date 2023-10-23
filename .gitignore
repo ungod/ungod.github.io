@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 _site/*
 _theme_packages/*
 
@@ -10,3 +11,11 @@ Thumbs.db
 .rvmrc
 
 *.lock
+=======
+*.gem
+.bundle
+.sass-cache
+_site
+Gemfile.lock
+.DS_Store
+>>>>>>> d29bb0adea4ca2b1901c24bf21028b2f80def896

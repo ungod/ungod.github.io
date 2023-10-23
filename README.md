@@ -4,8 +4,12 @@
 
 Jekyll-Jacman 是为 [Jekyll](http://jekyllrb.com) 设计的一款清新且具有响应式的主题，拥有更丰富的特性并支持了很多的国内服务。Jacman 始于 [Hexo Jacman](https://github.com/wuchong/jacman) 移植而来。
 
+<<<<<<< HEAD
  * [主题演示](http://simpleyyt.github.io/jekyll-jacman/)
  * [如何使用 Jacman 主题](http://simpleyyt.github.io/jekyll-jacman/jekyll/2015/09/20/how-to-use-jacman)
+=======
+The text is made beautiful with combination of [League Gothic](https://www.fontsquirrel.com/fonts/league-gothic), [Roboto](https://fonts.google.com/specimen/Roboto) and [Open Sans](https://fonts.google.com/specimen/Open+Sans). Now who doesn't love them.
+>>>>>>> d29bb0adea4ca2b1901c24bf21028b2f80def896
 
 ## 本地搭建
 
@@ -36,9 +40,18 @@ bundle install
 
 运行 Jekyll：
 
+<<<<<<< HEAD
 ```sh
 bundle exec jekyll server
 ```
+=======
+- [Get started](https://jekyllrb.com/docs/installation/) with having the necessary tools set up
+- Download the zip of this project or simple clone it
+- Delete the ```tmp/``` directory and any sample ```_posts```
+- Customize the variables in ```_config.yml``` file such that it reflects your information. Similarly, change the disqus username (or remove it altogether).
+- Replace footer links in the ```_layouts/default.html``` file with yours.
+- Replace the ```site:example.com``` in ```assets/js/custom.js``` with your site's address.
+>>>>>>> d29bb0adea4ca2b1901c24bf21028b2f80def896
 
 更多细节可以参考：[Setting up your GitHub Pages site locally with Jekyll](https://help.github.com/articles/setting-up-your-github-pages-site-locally-with-jekyll/)
 
@@ -73,6 +86,7 @@ bundle exec jekyll server
 - **其他**
  你可以设置侧边栏在博文页面中不显示。
 
+<<<<<<< HEAD
 ## 协议
 
 [MIT](/LICENSE)
@@ -82,3 +96,7 @@ bundle exec jekyll server
 支付宝捐赠链接还是要有的，万一真的有人捐呢。
 
 ![支付宝扫码捐赠](http://p1.bpimg.com/567571/9a4a158daee8aa69.png)
+=======
+### What's up with the name?
+I was watching [My Neighbour Totoro](https://en.wikipedia.org/wiki/Susuwatari) while developing :-)
+>>>>>>> d29bb0adea4ca2b1901c24bf21028b2f80def896
