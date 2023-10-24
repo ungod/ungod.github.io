@@ -53,7 +53,7 @@ Contributions (_pull requests_, _issues_, and _discussions_) are what make the o
 to learn, inspire, and create. Any contributions you make are greatly appreciated.
 For details, see the "[Contributing Guidelines][contribute-guide]".
 
-## Credits
+## Credits 
 
 This project was built primarily with the [Jekyll][jekyllrb] ecosystem,
 [Bootstrap][bootstrap], [Font Awesome][icons], and some other [wonderful tools][lib].
