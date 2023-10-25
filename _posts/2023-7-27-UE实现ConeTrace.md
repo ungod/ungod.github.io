@@ -2,6 +2,7 @@
 layout: post
 title: UE实现圆锥体ConeTrace
 published: true
+math: true
 typora-root-url: ..
 ---
 
@@ -50,6 +51,7 @@ typora-root-url: ..
 
 
 经过切面划分的方式，结果可能有不在圆锥内的结果，因此还需要排除。排除方法也很简单，判断Trace方向与结果方向的夹角，是否小于圆锥半角即可。可以概括为下面公式：
+
 $$
 \arccos(\hat{V_t}\cdot\hat{V_d}) \leq \frac{\theta_c}{2}
 $$
@@ -88,7 +90,9 @@ void ConeTraceSingle(const UObject* WorldContextObject, const FVector Start, con
 			FVector StepEnd = Start + Direction * (i + 1) * StepLength;
 
 			TArray<FHitResult> StepHit;
-			SphereTraceMultiWithoutBlock(WorldContextObject, StepStart, StepEnd, ConeBottomRadius, TraceChannel, 				bTraceComplex, ActorsToIgnore, DrawDebugType, StepHit, bIgnoreSelf, TraceColor,FLinearColor::Black, 				DrawTime);
+			SphereTraceMultiWithoutBlock(WorldContextObject, StepStart, StepEnd, ConeBottomRadius, TraceChannel, 
+                                         bTraceComplex, ActorsToIgnore, DrawDebugType, StepHit, bIgnoreSelf,
+                                         TraceColor,FLinearColor::Black, DrawTime);
 
 			if (StepHit.Num() > 0)
 			{
@@ -123,19 +127,28 @@ void ConeTraceSingle(const UObject* WorldContextObject, const FVector Start, con
 其中`SphereTraceMultiWithoutBlock`函数是把Block降级为Overlap的方法：
 
 ```c++
-void SphereTraceMultiWithoutBlock(const UObject* WorldContextObject, const FVector Start, const FVector End, float Radius, ETraceTypeQuery TraceChannel, bool bTraceComplex, const TArray<AActor*>& ActorsToIgnore, EDrawDebugTrace::Type DrawDebugType, TArray<FHitResult>& OutHits, bool bIgnoreSelf, FLinearColor TraceColor, FLinearColor TraceHitColor, float DrawTime)
+void SphereTraceMultiWithoutBlock(const UObject* WorldContextObject, const FVector Start, 
+                                  const FVector End, float Radius,
+                                  ETraceTypeQuery TraceChannel, bool bTraceComplex, 
+                                  const TArray<AActor*>& ActorsToIgnore,
+                                  EDrawDebugTrace::Type DrawDebugType, 
+                                  TArray<FHitResult>& OutHits, bool bIgnoreSelf, FLinearColor
+                                  TraceColor, FLinearColor TraceHitColor, float DrawTime)
 {
 	SCOPE_CYCLE_COUNTER(STAT_SMGSphereTrace);
 	
 	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
 
 	static const FName SphereTraceMultiName(TEXT("SphereTraceMulti"));
-	FCollisionQueryParams Params = ConfigureCollisionParams(SphereTraceMultiName, bTraceComplex, ActorsToIgnore, bIgnoreSelf, WorldContextObject);
-
-	FCollisionResponseParams ResponseParams;
+	FCollisionQueryParams Params = ConfigureCollisionParams(SphereTraceMultiName, bTraceComplex, 
+                                                            ActorsToIgnore, bIgnoreSelf, WorldContextObject);
+    
+    FCollisionResponseParams ResponseParams;
 	ResponseParams.CollisionResponse.SetAllChannels(ECR_Overlap);
 	
 	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
-	bool const bHit = World ? World->SweepMultiByChannel(OutHits, Start, End, FQuat::Identity, CollisionChannel, FCollisionShape::MakeSphere(Radius), Params, ResponseParams) : false;
+	bool const bHit = World ? World->SweepMultiByChannel(OutHits, Start, End, FQuat::Identity, CollisionChannel,
+                                                         FCollisionShape::MakeSphere(Radius), 
+                                                         Params, ResponseParams) : false;
 }
 ```

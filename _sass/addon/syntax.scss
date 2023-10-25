@@ -131,7 +131,7 @@ code {
 
 td.rouge-code {
   @extend %code-snippet-padding;
-
+  tab-size: 3;
   /*
     Prevent some browser extends from
     changing the URL string of code block.
