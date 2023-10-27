@@ -1,6 +1,7 @@
 ---
 layout: post
 title: UE实现圆锥体ConeTrace
+categories: [游戏, 物理]
 published: true
 math: true
 typora-root-url: ..

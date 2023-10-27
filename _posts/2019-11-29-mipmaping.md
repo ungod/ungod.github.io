@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Mipmapping
+categories: [游戏, 渲染]
 tags:
 date: 2019-11-29
 ---

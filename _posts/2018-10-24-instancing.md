@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Instancing
+categories: [游戏, 渲染]
 tags:
 ---
 

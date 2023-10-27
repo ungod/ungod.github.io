@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 三角形的基础、插值和重心坐标
+categories: [游戏, 渲染]
 math: true
 tags:
 ---

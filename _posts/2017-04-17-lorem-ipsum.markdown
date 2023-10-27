@@ -1,6 +1,7 @@
 ---
 title: Lorem Ipsum
 layout: post
+published: false
 ---
 ## Lorem ipsum dolor sit amet
 
