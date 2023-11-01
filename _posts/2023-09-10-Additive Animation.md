@@ -3,6 +3,7 @@ layout: post
 title: 叠加动画原理细节
 tags: [游戏, 动画]
 published: true
+math: true
 typora-root-url: ..
 ---
 
@@ -90,7 +91,6 @@ _官方AimOffset例子_
 下图是简化模型的动画蓝图逻辑，过程就是：TPose动画根据Rotation自动递增旋转，并且以MeshSpace叠加Yaw+90的H手部骨骼Hand_L动画。
 
 ![image-20231101191645888](/assets/postasset/2023-09-10-Additive Animation/image-20231101191645888.png)
-
 _叠加动画的简化模型_
 
 
@@ -98,7 +98,6 @@ _叠加动画的简化模型_
 下图是实际执行动画。在Tpose情况下，左手在Mesh空间叠加Pitch90°，脊椎Yaw持续递增。我们可以看到左手掌心朝向始终不变，以局部坐标来看的话，就是左手的-Y轴朝向始终不变。
 
 ![tpos_yaw](/assets/postasset/2023-09-10-Additive Animation/tpos_yaw.gif)
-
 _掌心朝向始终不变_
 
 
@@ -106,7 +105,6 @@ _掌心朝向始终不变_
 如果把左手的Roll去掉呢？可以发现这时候手部骨骼Y轴是始终朝上，也就手部的Y轴不受到角色脊椎的Yaw结果的影响。
 
 ![tpos_yaw_noroll](/assets/postasset/2023-09-10-Additive Animation/tpos_yaw_noroll.gif)
-
 _去掉手部骨骼的Pitch，Y轴朝向始终不变_
 
 
@@ -114,7 +112,6 @@ _去掉手部骨骼的Pitch，Y轴朝向始终不变_
 我们根据下图梳理一下整个过程：A.当脊椎骨骼旋转20°——B.准备以MeshSpace旋转左手骨骼，可见都是以Mesh坐标的Pitch平面来旋转的——C.根据B描述，Pitch+90。在D阶段，Y轴始终朝向不会被A影响。假如去掉C也是一样的，只是本身朝向不一样。因此，**对于手部的MeshSpace Additive，因为手部的Y轴朝向跟脊椎的旋转轴一样，其Y轴朝向不会受到角色脊椎Yaw的影响。**
 
 ![image-20231101194941399](/assets/postasset/2023-09-10-Additive Animation/image-20231101194941399.png)
-
 _两个旋转变换可见MeshSpace Additive的作用_
 
 
@@ -128,7 +125,6 @@ _两个旋转变换可见MeshSpace Additive的作用_
 Mesh Space Additive则能起到此作用：Overlay的躯干运动Roll朝向不变，BasePose的叠加Roll朝向则不受Overlay任意动画的影响。
 
 ![image-20231101202247800](/assets/postasset/2023-09-10-Additive Animation/image-20231101202247800.png)
-
 _Overlay动画和BasePose动画的膝盖Z轴几乎不怎么变化_
 
 
@@ -140,9 +136,9 @@ Mesh Space Additive不知道算不算是UE引擎特有的一项特性，不过�
 ### 参考
 
 
-[^1]: Unreal Engine Apply Additive :https://docs.unrealengine.com/5.3/en-US/animation-node-technical-guide-in-unreal-engine/#poseinputs
-[^2]: Unity Animation Layer  https://docs.unity3d.com/Manual/AnimationLayers.html
-[^3]: CryEngine Additive Animation : https://docs.cryengine.com/display/CEMANUAL/Additive+Animations
-[^4]: Advanced Locomotion System :https://github.com/dyanikoglu/ALS-Community#advanced-locomotion-system---community-version
+[^1]: Unreal Engine Apply Additive: [https://docs.unrealengine.com/5.3/en-US/animation-node-technical-guide-in-unreal-engine/#poseinputs](https://docs.unrealengine.com/5.3/en-US/animation-node-technical-guide-in-unreal-engine/#poseinputs)
+[^2]: Unity Animation Layer:  [https://docs.unity3d.com/Manual/AnimationLayers.html](https://docs.unity3d.com/Manual/AnimationLayers.html)
+[^3]: CryEngine Additive Animation: [https://docs.cryengine.com/display/CEMANUAL/Additive+Animations](https://docs.cryengine.com/display/CEMANUAL/Additive+Animations)
+[^4]: Advanced Locomotion System: [https://github.com/dyanikoglu/ALS-Community#advanced-locomotion-system---community-version](https://github.com/dyanikoglu/ALS-Community#advanced-locomotion-system---community-version)
 [^5]: 游戏引擎架构【美】Jason Gregory(杰森.格雷戈瑞)，章节11.6.5，译本490页
-[^6]: Mesh Space Additive: https://docs.unrealengine.com/5.3/en-US/aim-offset-in-unreal-engine/#meshspaceadditive
+[^6]: Mesh Space Additive: [https://docs.unrealengine.com/5.3/en-US/aim-offset-in-unreal-engine/#meshspaceadditive](https://docs.unrealengine.com/5.3/en-US/aim-offset-in-unreal-engine/#meshspaceadditive)
