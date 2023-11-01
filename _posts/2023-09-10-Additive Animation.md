@@ -18,17 +18,17 @@ typora-root-url: ..
 
 以ALS[^4]的实现为例，这个动画框架本身实现了一个较为复杂的分层（将头、腰、腿、手都分了叠加层），但是它的最终混合实现都是：Overlay + (BasePose - BaseInput) = Output。框架中的分层结构是以Overlay作为最基础动作，BasePose即Locomotion动作，减去BaseInput即Idle单帧动作，求出叠加动作，然后Overlay加上刚刚的叠加动作，得到最终动画。如图所示：
 
-![image-20231030152534727](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231030152534727.png)
+![image-20231030152534727](/assets/postasset/2023-09-10-Additive Animation/image-20231030152534727.png)
 _ALS的分层叠加流程_
 
 以动画的矩阵乘法来看，”+“是矩阵变换，即基础动画S左乘叠加动画A。”-“则是基础动画S左乘参考动画R的逆，即$SR^-1$。一般来说都会把矩阵拆分为SQT来进行运算，一个是为了性能，一个是为了插值，见游戏引擎架构[^5]。
 
 $$
-D_j = S_jR_j^-1 \tag{1}
+D_j = S_jR_j^-1 /tag{1}
 $$
 
 $$
-A_j = D_jTj = (S_jR_j^-1)T_j \tag{2}
+A_j = D_jTj = (S_jR_j^-1)T_j /tag{2}
 $$
 
 其中$D_j$是计算出来的叠加动画，$S_j$是叠加源动画，$R_j$是参考动画。$A_j$是最终应用的叠加动画，$T_j$是被应用的基础动画。
@@ -53,9 +53,10 @@ $$
 
 3. 倾斜动画带AimOffset的Mesh Additive叠加，瞄准方向不会随着倾斜角度偏移
 
-![image-20231030160646252](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231030160646252.png)
-_官方AimOffset例子_
 
+
+![image-20231030160646252](/assets/postasset/2023-09-10-Additive Animation/image-20231030160646252.png)
+_官方AimOffset例子_
 
 
 官方例子是个应用，原理表述上实在模糊。不理解其原理，也没法对这项技术举一反三。
@@ -66,7 +67,7 @@ _官方AimOffset例子_
 
 本文公式（1）中是生成叠加动画的原理，在UE中其主要源码如下：
 
-![image-20231030161455992](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231030161455992.png)
+![image-20231030161455992](/assets/postasset/2023-09-10-Additive Animation/image-20231030161455992.png)
 
 上面这代码是Make Dynamic Additive节点的逻辑，AnimSequence实际上生成的叠加动画也是一样的逻辑。
 
@@ -74,7 +75,7 @@ _官方AimOffset例子_
 
 
 
-![image-20231030162213952](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231030162213952.png)
+![image-20231030162213952](/assets/postasset/2023-09-10-Additive Animation/image-20231030162213952.png)
 
 上图是Apply Mesh Additive动画节点的主要源码部分，可见Local Additive与Mesh Additive的区别在于：**把矩阵的旋转部分在叠加运算前，转换到Mesh空间**。更细节解释，Local Additive是把叠加动画的运算是直接在本地空间做的，而Mesh Additive是在Mesh空间做的。
 
@@ -88,7 +89,7 @@ _官方AimOffset例子_
 
 下图是简化模型的动画蓝图逻辑，过程就是：TPose动画根据Rotation自动递增旋转，并且以MeshSpace叠加Yaw+90的H手部骨骼Hand_L动画。
 
-![image-20231101191645888](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231101191645888.png)
+![image-20231101191645888](/assets/postasset/2023-09-10-Additive Animation/image-20231101191645888.png)
 
 _叠加动画的简化模型_
 
@@ -96,7 +97,7 @@ _叠加动画的简化模型_
 
 下图是实际执行动画。在Tpose情况下，左手在Mesh空间叠加Pitch90°，脊椎Yaw持续递增。我们可以看到左手掌心朝向始终不变，以局部坐标来看的话，就是左手的-Y轴朝向始终不变。
 
-![tpos_yaw](C:\Github\assets\postasset\2023-09-10-Additive Animation\tpos_yaw.gif)
+![tpos_yaw](/assets/postasset/2023-09-10-Additive Animation/tpos_yaw.gif)
 
 _掌心朝向始终不变_
 
@@ -104,7 +105,7 @@ _掌心朝向始终不变_
 
 如果把左手的Roll去掉呢？可以发现这时候手部骨骼Y轴是始终朝上，也就手部的Y轴不受到角色脊椎的Yaw结果的影响。
 
-![tpos_yaw_noroll](C:\Github\assets\postasset\2023-09-10-Additive Animation\tpos_yaw_noroll.gif)
+![tpos_yaw_noroll](/assets/postasset/2023-09-10-Additive Animation/tpos_yaw_noroll.gif)
 
 _去掉手部骨骼的Pitch，Y轴朝向始终不变_
 
@@ -112,7 +113,7 @@ _去掉手部骨骼的Pitch，Y轴朝向始终不变_
 
 我们根据下图梳理一下整个过程：A.当脊椎骨骼旋转20°——B.准备以MeshSpace旋转左手骨骼，可见都是以Mesh坐标的Pitch平面来旋转的——C.根据B描述，Pitch+90。在D阶段，Y轴始终朝向不会被A影响。假如去掉C也是一样的，只是本身朝向不一样。因此，**对于手部的MeshSpace Additive，因为手部的Y轴朝向跟脊椎的旋转轴一样，其Y轴朝向不会受到角色脊椎Yaw的影响。**
 
-![image-20231101194941399](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231101194941399.png)
+![image-20231101194941399](/assets/postasset/2023-09-10-Additive Animation/image-20231101194941399.png)
 
 _两个旋转变换可见MeshSpace Additive的作用_
 
@@ -126,7 +127,7 @@ _两个旋转变换可见MeshSpace Additive的作用_
 
 Mesh Space Additive则能起到此作用：Overlay的躯干运动Roll朝向不变，BasePose的叠加Roll朝向则不受Overlay任意动画的影响。
 
-![image-20231101202247800](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231101202247800.png)
+![image-20231101202247800](/assets/postasset/2023-09-10-Additive Animation/image-20231101202247800.png)
 
 _Overlay动画和BasePose动画的膝盖Z轴几乎不怎么变化_
 
