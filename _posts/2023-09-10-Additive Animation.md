@@ -85,6 +85,54 @@ _官方AimOffset例子_
 
 用线性代数，通过运算的方式来解释上述情况不是难事，不过也不大直观。我这里通过一个简化的动画运算模型，来描述Mesh Additive期间运算流程，就知道为什么会产生官方文档的应用效果了。
 
+下图是简化模型的动画蓝图逻辑，过程就是：TPose动画根据Rotation自动递增旋转，并且以MeshSpace叠加Yaw+90的H手部骨骼Hand_L动画。
+
+![image-20231101191645888](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231101191645888.png)
+
+_叠加动画的简化模型_
+
+
+
+下图是实际执行动画。在Tpose情况下，左手在Mesh空间叠加Pitch90°，脊椎Yaw持续递增。我们可以看到左手掌心朝向始终不变，以局部坐标来看的话，就是左手的-Y轴朝向始终不变。
+
+![tpos_yaw](C:\Github\assets\postasset\2023-09-10-Additive Animation\tpos_yaw.gif)
+
+_掌心朝向始终不变_
+
+
+
+如果把左手的Roll去掉呢？可以发现这时候手部骨骼Y轴是始终朝上，也就手部的Y轴不受到角色脊椎的Yaw结果的影响。
+
+![tpos_yaw_noroll](C:\Github\assets\postasset\2023-09-10-Additive Animation\tpos_yaw_noroll.gif)
+
+_去掉手部骨骼的Pitch，Y轴朝向始终不变_
+
+
+
+我们根据下图梳理一下整个过程：A.当脊椎骨骼旋转20°——B.准备以MeshSpace旋转左手骨骼，可见都是以Mesh坐标的Pitch平面来旋转的——C.根据B描述，Pitch+90。在D阶段，Y轴始终朝向不会被A影响。假如去掉C也是一样的，只是本身朝向不一样。因此，**对于手部的MeshSpace Additive，因为手部的Y轴朝向跟脊椎的旋转轴一样，其Y轴朝向不会受到角色脊椎Yaw的影响。**
+
+![image-20231101194941399](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231101194941399.png)
+
+_两个旋转变换可见MeshSpace Additive的作用_
+
+
+
+综合结论：基础动画的任意单轴方向旋转(Roll, Pitch, Yaw)不会影响子骨骼在MeshSpace下的单轴方向(X, Y, Z)，同时在子骨骼叠加MeshSpace的骨骼旋转，原来的单轴方也不会改变。官方例子中，1主要是产生MeshSpace下的Roll旋转（如图红轴），子骨骼叠加的X方向将不受父骨骼Roll的任意旋转影响，从而产生3的结果，提高AO动画稳定性。
+
+
+
+开放来说，Mesh Space能提高躯干动画的稳定性。以ALS为例，躯干这里指的是头、腰、腿的人体直立部分。手臂因为是LocalSpace的不在此讨论。通过ALS提供的动画观察，持械和步行动画的Z轴（对于Mesh空间是Roll X轴）朝向的变动比较小，以人体骨骼运动来说，躯干关节都以Roll运动为主。以框架来说，Overlay和BasePose的躯干部分的前后方运动，Spine的Yaw、Lean和头部追踪等会影响Roll朝向的都是额外模块的，所以动画都以Roll为主。所以Overlay动画基本上Roll朝向不变能满足绝大部分动画情况。而步行可能有侧移之类的。
+
+Mesh Space Additive则能起到此作用：Overlay的躯干运动Roll朝向不变，BasePose的叠加Roll朝向则不受Overlay任意动画的影响。
+
+![image-20231101202247800](C:\Github\assets\postasset\2023-09-10-Additive Animation\image-20231101202247800.png)
+
+_Overlay动画和BasePose动画的膝盖Z轴几乎不怎么变化_
+
+
+
+Mesh Space Additive不知道算不算是UE引擎特有的一项特性，不过活用此项特性，确实能提高叠加动画在某方向上的稳定性，对于做混合动画逻辑、程序化动画逻辑都十分有用。
+
 
 
 ### 参考
