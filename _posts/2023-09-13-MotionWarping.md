@@ -1,6 +1,7 @@
 ---
 layout: post
 title: MotionWarping
+categories: [游戏, 动画]
 tags: [游戏, 动画]
 published: true
 math: true

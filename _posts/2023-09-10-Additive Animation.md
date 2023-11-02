@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 叠加动画原理细节
+categories: [游戏, 动画]
 tags: [游戏, 动画]
 published: true
 math: true
