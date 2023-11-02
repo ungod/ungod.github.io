@@ -1,7 +1,7 @@
 ---
 layout: post
 title: MotionWarping
-tags:
+tags: [游戏, 动画]
 published: true
 math: true
 typora-root-url: ..
