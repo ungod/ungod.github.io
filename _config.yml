@@ -76,7 +76,7 @@ img_cdn: "https://raw.githubusercontent.com/ungod/ungod.github.io/master/"
 avatar: "/assets/img/favicons/android-chrome-512x512.png"
 
 # boolean type, the global switch for TOC in posts.
-toc: false
+toc: true
 
 comments:
   active: # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
