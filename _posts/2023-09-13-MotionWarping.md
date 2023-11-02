@@ -207,5 +207,9 @@ RootMotion Turn + MotionWarping + TimeWarping保证随时能打断，并且平�
 
 
 
+
+## 参考
+
+
 [^1]: Bringing Hell to Life: AI and Full Body Animation in DOOM: [https://www.youtube.com/watch?v=3lO1q8mQrrg](https://www.youtube.com/watch?v=3lO1q8mQrrg)
 [^2]: Player Traversal Mechanics in the Vast World of Horizon Zero Dawn: [https://www.youtube.com/watch?v=LrLHsbTK5bM](https://www.youtube.com/watch?v=LrLHsbTK5bM)
