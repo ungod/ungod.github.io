@@ -91,8 +91,8 @@ comments:
   giscus:
     repo: ungod/ungod.github.io # <gh-username>/<repo>
     repo_id: MDEwOlJlcG9zaXRvcnkxNTA3MjEyMjY=
-    category: comment
-    category_id:
+    category: "Announcements"
+    category_id: "DIC_kwDOCPvSys4CaoHG"
     mapping: # optional, default to 'pathname'
     input_position: "bottom" # optional, default to 'bottom'
     lang: "zh-CN" # optional, default to the value of `site.lang`
