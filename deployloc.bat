@@ -1,2 +1,2 @@
-bundle exec jeykll s
+bundle exec jekyll s
 pause
