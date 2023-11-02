@@ -2,7 +2,7 @@
 layout: post
 title: MotionWarping
 tags:
-published: false
+published: true
 math: true
 typora-root-url: ..
 ---
