@@ -16,7 +16,7 @@ timezone: Asia/Shanghai
 
 title: Hika # the main title
 
-tagline: A blog focus GameDev # it will display as the sub-title
+tagline: A blog focus on GameDev # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
