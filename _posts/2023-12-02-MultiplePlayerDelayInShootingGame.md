@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 射击游戏的延迟对抗
-tags: [游戏,网络]
-categories: [游戏, 动画]
+tags: [游戏, 网络]
+categories: [游戏, 网络]
 published: true
 typora-root-url: ..
 ---
@@ -87,7 +87,7 @@ _守望先锋猎空演示：不管是单机状态下，还是250ms延迟下上�
 而下面的演示例子则是技能释放时进行输入预测，但是被拉回的情况。可以看到温斯顿在200ms延迟的情况下出现了错误的预测，在起跳的时候被美冻住了。原本要起跳在空中被拉回到地面，同时本来的技能CD被瞬间刷新。
 
 ![ow2](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow2.gif)
-_守望先锋温斯顿演示：起跳过程中被拉回
+_守望先锋温斯顿演示：起跳过程中被拉回_
 
 
 
