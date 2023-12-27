@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 射击游戏的延迟对抗
-tags:[游戏,网络]
+tags: [游戏,网络]
 categories: [游戏, 动画]
 published: true
 typora-root-url: ..
