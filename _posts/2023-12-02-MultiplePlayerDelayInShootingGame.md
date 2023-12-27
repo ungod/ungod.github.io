@@ -157,7 +157,7 @@ _猎空的移动指令环_
 
 在GDC2011有个Halo Reach的分享，讲的也是本地预测的实例。其预测部分也做了有趣而合理的处理。
 
-![halo1](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo1.png)
+![halo3](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo3.png)
 
 如上图这是一个扔手雷的流程，客户端按下输入键，通知服务器要扔手雷，并等待服务器返回才开始播放扔手雷动画。黄色字体的部分就是延迟，会让玩家感受到，体验很差。
 
@@ -172,8 +172,7 @@ _猎空的移动指令环_
 
 
 
-
-![halo3](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo3.png)
+![halo1](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo1.png)
 
 然后下面是最终使用的方案：按下按键通知服务器，马上播放手雷动画，服务器收到了开始模拟动画并创建手雷弹道，返回客户端，客户端一定时间后才创建手雷。这样保证了避免回滚造成的表现混乱，也能降低玩家的延迟感知——游戏中扔手雷的手臂占了三分之一屏幕，玩家是很难感受到手雷生成的延迟的。
 
