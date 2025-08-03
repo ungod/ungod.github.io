@@ -22,7 +22,7 @@ typora-root-url: ..
 
 常说的CS同步方式，即Client-Server模型，其实就是来自CS（不是🤣）。Valve的Source引擎，也就是半条命/CS的引擎，网络模型被几乎所有的现代射击游戏都被使用参考和迭代。里面包含平滑插值，输入预测和延迟补偿的那几个概念。Valve的游戏一般每秒以20-60个数据包，也即是20Hz到60Hz的频率进行网络同步。同时缓存100毫秒的快照，用作网络回滚。详情可以查看Source引擎相关文档：[https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking](https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking)
 
-![image-20231202163010983](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/image-20231202163010983.png)
+![image-20231202163010983](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/image-20231202163010983.png)
 _SourceEngine的网络模型_
 
 
@@ -47,7 +47,7 @@ _SourceEngine的网络模型_
 
 
 
-![image-20231202165727807](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/image-20231202165727807.png)
+![image-20231202165727807](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/image-20231202165727807.png)
 _快照的平滑插值_
 
 
@@ -57,7 +57,7 @@ _快照的平滑插值_
 - 内插值(Interpolation)指的是在已知快照之间进行插值，插值方法如线性插值、指数插值等。
 - 外插值(Extrapolation)指的是根据已知快照，推断丢失快照的值（如丢包），或者是推测未来快照（如输入预测），插值方法如Dead Reckoning算法，或者是现在已被多次落地的神经网络算法。可见论文：[https://uwspace.uwaterloo.ca/bitstream/handle/10012/16960/Walker_Tristan.pdf?sequence=3](https://uwspace.uwaterloo.ca/bitstream/handle/10012/16960/Walker_Tristan.pdf?sequence=3)
 
-![image-20231202170714303](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/image-20231202170714303.png)
+![image-20231202170714303](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/image-20231202170714303.png)
 _Dead Reckoning预测算法Projective Velocity Blending的实现_
 
 
@@ -79,14 +79,14 @@ _Dead Reckoning预测算法Projective Velocity Blending的实现_
 
 然后是在延迟250ms的时候的演示，可以看到几乎跟之前一样，没有任何手感不好的情况，感受不到任何延迟。
 
-![ow1](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow1.gif)
+![ow1](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow1.gif)
 _守望先锋猎空演示：不管是单机状态下，还是250ms延迟下上面这种操作手感都是一模一样的_
 
 
 
 而下面的演示例子则是技能释放时进行输入预测，但是被拉回的情况。可以看到温斯顿在200ms延迟的情况下出现了错误的预测，在起跳的时候被美冻住了。原本要起跳在空中被拉回到地面，同时本来的技能CD被瞬间刷新。
 
-![ow2](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow2.gif)
+![ow2](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow2.gif)
 _守望先锋温斯顿演示：起跳过程中被拉回_
 
 
@@ -97,7 +97,7 @@ _守望先锋温斯顿演示：起跳过程中被拉回_
 
 
 
-![ow3](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow3.png)
+![ow3](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow3.png)
 _客户端先行与服务器的图示_
 
 
@@ -106,7 +106,7 @@ _客户端先行与服务器的图示_
 
 基本指令环为：客户端按照一定帧率获取输入，这里假设每帧——通过每帧输入，客户端先行执行GamePlay逻辑，同时发送输入指令到服务器——经过一定延迟后服务器受到输入指令并执行GamePlay逻辑并给客户端广播执行结果——经过一定延迟后客户端受到执行效果。
 
-![ow4](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow4.gif)
+![ow4](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow4.gif)
 _猎空的移动指令环_
 
 
@@ -117,7 +117,7 @@ _猎空的移动指令环_
 
 
 
-![ow5](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow5.gif)
+![ow5](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow5.gif)
 
 上面预测，裂空再跑，可以看到24帧的时候还在跑的状态。此时17帧服务器算到结果是猎空吃了一个麦克雷的闪光弹，但是客户端因为延迟目前预测不到。客户端在收到服务器17帧的纠正包后，先把裂空拉回到当时的位置，会把17帧之后的所有输入重播一遍。
 
@@ -139,7 +139,7 @@ _猎空的移动指令环_
 
 
 
-![ow6](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow6.gif)
+![ow6](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/ow6.gif)
 
 
 
@@ -157,7 +157,7 @@ _猎空的移动指令环_
 
 在GDC2011有个Halo Reach的分享，讲的也是本地预测的实例。其预测部分也做了有趣而合理的处理。
 
-![halo3](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo3.png)
+![halo3](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo3.png)
 
 如上图这是一个扔手雷的流程，客户端按下输入键，通知服务器要扔手雷，并等待服务器返回才开始播放扔手雷动画。黄色字体的部分就是延迟，会让玩家感受到，体验很差。
 
@@ -165,14 +165,14 @@ _猎空的移动指令环_
 
 
 
-![halo2](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo2.png)
+![halo2](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo2.png)
 
 然后后面这张图是不等待服务器返回，直接播放扔手雷动画。这样确实能隐藏延迟，这是一种不经过服务器允许就自行播放的做法，会造成玩家流程不连续的体验。譬如客户端已经播放了扔手雷的动画，还生成了手雷和特效，服务器却认为手雷扔出失败，需要客户端删除手雷和特效，可能造成延迟严重的人各种表现错误。
 
 
 
 
-![halo1](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo1.png)
+![halo1](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/halo1.png)
 
 然后下面是最终使用的方案：按下按键通知服务器，马上播放手雷动画，服务器收到了开始模拟动画并创建手雷弹道，返回客户端，客户端一定时间后才创建手雷。这样保证了避免回滚造成的表现混乱，也能降低玩家的延迟感知——游戏中扔手雷的手臂占了三分之一屏幕，玩家是很难感受到手雷生成的延迟的。
 
@@ -200,7 +200,7 @@ Valve的做法是：服务器会保存所有玩家一秒的历史快照，执行
 
 补偿时间如上所示的公式，注意这是预测的时间，有可能有一定的误差。如图红色是客户端的hitbox，服务器上人已经往前走了一段距离了，补偿返回的结果是蓝色的hitbox，存在一定的误差。
 
-![sourceengine](/assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/sourceengine.png)
+![sourceengine](assets/postasset/2023-12-02-MultiplePlayerDelayInShootingGame/sourceengine.png)
 _Source引擎文档的延迟补偿示例图_
 
 为什么客户端不直接告诉服务器要回滚的时间点这样更准确？因为客户端不可信，客户端可以控制回滚的时间从而实现作弊。

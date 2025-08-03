@@ -24,7 +24,7 @@ Doom当时叫Delta Correction[^1]主要是用在怪物向玩家突击，包括�
 
 
 
-![image-20231101204523977](/assets/postasset/2023-09-13-MotionWarping/image-20231101204523977.png)
+![image-20231101204523977](assets/postasset/2023-09-13-MotionWarping/image-20231101204523977.png)
 _GDC2017两项技术的分享_
 
 
@@ -45,7 +45,7 @@ _GDC2017两项技术的分享_
 
   
 
-![image-20231101210525613](/assets/postasset/2023-09-13-MotionWarping/image-20231101210525613.png)
+![image-20231101210525613](assets/postasset/2023-09-13-MotionWarping/image-20231101210525613.png)
 _Delta Correction图例_
 
 
@@ -59,7 +59,7 @@ UE官方插件名为MotionWarping的插件，就包含实现上述DeltaCorrectio
 - 选择合适的Modifier；
 - 设置WarpTarget的Position、Rotation。
 
-![image-20231101210806077](/assets/postasset/2023-09-13-MotionWarping/image-20231101210806077.png)
+![image-20231101210806077](assets/postasset/2023-09-13-MotionWarping/image-20231101210806077.png)
 _UE使用MotionWarping的三个步骤_
 
 核心修正代码都在Modifier中
@@ -72,7 +72,7 @@ _UE使用MotionWarping的三个步骤_
 
 不过使用SimpleWarp也是有缺陷的：SimpleWarp本质是等比缩放。等比缩放的轨迹曲线，突变问题可能会被放大，如下图的折线。轨迹复杂的曲线，如下图由多个曲线组成的轨迹，无法到达目标点。
 
-![image-20231102104223636](/assets/postasset/2023-09-13-MotionWarping/image-20231102104223636.png)
+![image-20231102104223636](assets/postasset/2023-09-13-MotionWarping/image-20231102104223636.png)
 
 _SimpleWarp的缺陷分别是突变问题（上图）和多峰值点无法触及目标点（下图）_
 
@@ -89,7 +89,7 @@ SkewWarp是UE提供的另外一种Warping算法，中文可翻译为错切扭曲
 
 错切的值会受到的指定的轴的值影响，如$x^, = x + ay$，$x$会受到$y$值的影响。这样又称沿着$y$轴错切。
 
-![image-20231101212447844](/assets/postasset/2023-09-13-MotionWarping/image-20231101212447844.png)
+![image-20231101212447844](assets/postasset/2023-09-13-MotionWarping/image-20231101212447844.png)
 _图来自games101，二维错切的图示及其矩阵_
 
 
@@ -98,14 +98,14 @@ _图来自games101，二维错切的图示及其矩阵_
 
 三维错切二维的扩展：指定一个不变轴（该轴的值错切后跟原值一样），其他两轴按比例加上不变轴而得到错切值。
 
-![image-20231101212834275](/assets/postasset/2023-09-13-MotionWarping/image-20231101212834275.png)
+![image-20231101212834275](assets/postasset/2023-09-13-MotionWarping/image-20231101212834275.png)
 _三维错切_
 
 
 
 三维错切可以说是在不同轴（或者说不同平面）上做二维错切。我们以x轴为例：发生错切当指定x轴不变的时候，y和z会加上x的值乘以一个常量而得。y轴和z轴同理：
 
-![image-20231101213607734](/assets/postasset/2023-09-13-MotionWarping/image-20231101213607734.png)
+![image-20231101213607734](assets/postasset/2023-09-13-MotionWarping/image-20231101213607734.png)
 _三维错切三轴矩阵_
 
 
@@ -134,14 +134,14 @@ $V_{fx}= V_{tx}$
 
 $a = tan⁡∠(V_e,V_t)$
 
-![image-20231101215402934](/assets/postasset/2023-09-13-MotionWarping/image-20231101215402934.png)
+![image-20231101215402934](assets/postasset/2023-09-13-MotionWarping/image-20231101215402934.png)
 _SkewWarp在XZ平面的图示，蓝色为原动画轨迹，红色为修正动画轨迹，绿色为修正过程_
 
 
 
 
 
-![image-20231101215622544](/assets/postasset/2023-09-13-MotionWarping/image-20231101215622544.png)
+![image-20231101215622544](assets/postasset/2023-09-13-MotionWarping/image-20231101215622544.png)
 _Skew变换三维视角，XY平面也是一样的_
 
 
@@ -188,7 +188,7 @@ $T^` = M_x × M_y × M _z ×T$
 
 旋转变换跟SimpleWarp一致。
 
-![image-20231102104050661](/assets/postasset/2023-09-13-MotionWarping/image-20231102104050661.png)
+![image-20231102104050661](assets/postasset/2023-09-13-MotionWarping/image-20231102104050661.png)
 _SkewWarp能避免突变问题（上图）和多峰值的曲线能更接近目标点（下图）_
 
 
