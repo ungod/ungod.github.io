@@ -10,7 +10,7 @@ typora-root-url: ..
 
 有时候实现Gameplay逻辑的时候，会要求判断屏幕的圆是否与场景的碰撞体相交（如瞄准辅助）。屏幕的圆与场景碰撞相交本质是视锥体与场景物体是否相交。此时ConeTrace能解决此问题，然而UE并不支持，Physx貌似也没有此类基本几何体。本文意在实现快速的ConeTrace。
 
-<img src="/assets/postasset/2023-7-27-UE实现ConeTrace/image-20230802204512708.png" alt="ConeTrace" style="zoom:50%;"/>
+<img src="assets/postasset/2023-7-27-UE实现ConeTrace/image-20230802204512708.png" alt="ConeTrace" style="zoom:50%;"/>
 
 <center>ConeTrace在摄像机内的横截面图示</center>
 
@@ -30,13 +30,13 @@ typora-root-url: ..
 
 网格划分指的是将屏幕圆划分成数个圆或者矩形，以圆或矩形发射SphereTrace或者BoxTrace。BoxTrace比SphereTrace的空隙更少，Trace长度长的比短的空隙更少，Trace分割（迭代）次数多的空隙比分割次数少的空隙更少。
 
-<img src="/assets/postasset/2023-7-27-UE实现ConeTrace/image-20230803162823639.png" alt="image-20230803162823639" style="zoom:50%;" />
+<img src="assets/postasset/2023-7-27-UE实现ConeTrace/image-20230803162823639.png" alt="image-20230803162823639" style="zoom:50%;" />
 
 
 
 切面划分的方法指的是把圆锥垂直切分成数分，用SphereTrace捕获对应的Actor。此方案不会有空隙的情况，但是需要排除几何体以外的碰撞。考虑到点在圆锥内的判断算法消耗不高，用此方案更为合适。
 
-<img src="/assets/postasset/2023-7-27-UE实现ConeTrace/image-20230803162745861.png" alt="image-20230803162745861" style="zoom:50%;" />
+<img src="assets/postasset/2023-7-27-UE实现ConeTrace/image-20230803162745861.png" alt="image-20230803162745861" style="zoom:50%;" />
 
 
 
