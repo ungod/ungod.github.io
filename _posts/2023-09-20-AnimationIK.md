@@ -160,7 +160,7 @@ FABRIK 的思想：通过两次传递迭代——“向后传递”（从末端�
 - 重复向后/向前传递若干次后，链条在满足各段长度约束下逐步收敛，使末端尽可能接近 Target（若目标在可达距离内则可达到精确到阈值）。
 - 虚线/实线交替表示多次迭代过程中的位移轨迹。
 
-详细可截[[FABRIK: a fast, iterative solver for the inverse kinematics problem]](http://www.andreasaristidou.com/FABRIK.html)
+详细可截[[FABRIK: a fast, iterative solver for the inverse kinematics problem]](https://www.andreasaristidou.com/FABRIK.html)
 
 
 
