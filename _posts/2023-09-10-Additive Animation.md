@@ -57,8 +57,7 @@ $$
 
 
 
-![image-20231030160646252](assets/postasset/2023-09-10-Additive Animation/image-20231030160646252.png)
-_官方AimOffset例子_
+![image-20231030160646252](assets/postasset/2023-09-10-Additive Animation/image-20231030160646252.png)![image-20250824171512273](assets/postasset/2023-09-10-Additive Animation/image-20250824171512273.png)_官方AimOffset例子_
 
 
 官方例子是个应用，原理表述上实在模糊。不理解其原理，也没法对这项技术举一反三。
