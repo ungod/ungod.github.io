@@ -9,7 +9,7 @@ order: 4
 文章都是个人拙见，欢迎通过：
 
 - 邮箱：jimkenfires@163.com
-- QQ：365300970
+- Wechat：Lynxgate
 - 知乎：[https://www.zhihu.com/people/ungod](https://www.zhihu.com/people/ungod)
 
 联系我互相交流~
